@@ -29,6 +29,7 @@ namespace Vds.Tests {
 
 		}
 
+
 		[TestMethod]
 		public void TestProviders() {
 			var vdsService = CreateVdsService();
@@ -63,6 +64,22 @@ namespace Vds.Tests {
 				Marshal.ThrowExceptionForHR(pack.QueryDisks(out diskEnum));
 
 				EnumDisks(diskEnum);
+
+				IEnumVdsObject volumeEnum;
+				Marshal.ThrowExceptionForHR(pack.QueryVolumes(out volumeEnum));
+				EnumVolumes(volumeEnum);
+			}
+		}
+
+		private void EnumVolumes(IEnumVdsObject volumeEnum) {
+			object iface;
+			int fetched;
+			while(0 == volumeEnum.Next(1, out iface, out fetched)) {
+				var volume = iface as IVdsVolume;
+				VdsVolumeProperties properties;
+				Marshal.ThrowExceptionForHR(volume.GetProperties(out properties));
+
+				var volumeMF = volume as IVdsVolumeMF;
 			}
 		}
 

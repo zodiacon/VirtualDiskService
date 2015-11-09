@@ -7,53 +7,59 @@ using System.Text;
 using System.Threading.Tasks;
 using Vds.Interop;
 
-namespace Vds
-{
-	public static class IVdsServiceExtensions
-	{
-		public static ICollection<IVdsDisk> GetDisks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software)
-		{
+namespace Vds {
+	public static class IVdsServiceExtensions {
+		public static IEnumerator<IVdsDisk> GetDisks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
+
+			foreach(var pack in vdsService.GetPacks(providerMask)) {
+				IEnumVdsObject diskEnum;
+				Marshal.ThrowExceptionForHR(pack.QueryDisks(out diskEnum));
+				object iface;
+				int fetched;
+
+				while(0 == diskEnum.Next(1, out iface, out fetched)) {
+					yield return iface as IVdsDisk;
+				}
+			}
+		}
+
+		public static IEnumerable<IVdsProvider> GetProviders(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
 			IEnumVdsObject providerEnum;
 			int hr = vdsService.QueryProviders(providerMask, out providerEnum);
 			Marshal.ThrowExceptionForHR(hr);
 
-			var disks = new List<IVdsDisk>();
-
 			object iface;
 			int fetched;
-			while (0 == providerEnum.Next(1, out iface, out fetched))
-			{
-				var swProvider = iface as IVdsSwProvider;
-				if (swProvider != null)
-				{
-					IEnumVdsObject packEnum;
-					Marshal.ThrowExceptionForHR(swProvider.QueryPacks(out packEnum));
-
-					while (0 == packEnum.Next(1, out iface, out fetched))
-					{
-						disks.AddRange(GetDisks(iface as IVdsPack));
-					}
-
-				}
+			while(0 == providerEnum.Next(1, out iface, out fetched)) {
+				yield return iface as IVdsProvider;
 			}
-			return disks;
 		}
 
-		public static ICollection<IVdsDisk> GetDisks(this IVdsPack pack)
-		{
-			IEnumVdsObject diskEnum;
-			Marshal.ThrowExceptionForHR(pack.QueryDisks(out diskEnum));
-
-			object iface;
-			int fetched;
-			var disks = new List<IVdsDisk>();
-			while (0 == diskEnum.Next(1, out iface, out fetched))
-			{
-				var disk = iface as IVdsDisk;
-				Debug.Assert(disk != null);
-				disks.Add(disk);
+		public static IEnumerable<IVdsPack> GetPacks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
+			foreach(var provider in vdsService.GetProviders(providerMask)) {
+				var swProvider = provider as IVdsSwProvider;
+				if(swProvider != null) {
+					IEnumVdsObject packEnum;
+					Marshal.ThrowExceptionForHR(swProvider.QueryPacks(out packEnum));
+					object iface;
+					int fetched;
+					while(0 == packEnum.Next(1, out iface, out fetched)) {
+						yield return iface as IVdsPack;
+					}
+				}
 			}
-			return disks;
+		}
+
+		public static IEnumerable<IVdsVolume> GetVolumes(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
+			foreach(var pack in vdsService.GetPacks(providerMask)) {
+				IEnumVdsObject volumeEnum;
+				pack.QueryVolumes(out volumeEnum);
+				object iface;
+				int fetched;
+				while(0 == volumeEnum.Next(1, out iface, out fetched)) {
+					yield return iface as IVdsVolume;
+				}
+			}
 		}
 	}
 }
