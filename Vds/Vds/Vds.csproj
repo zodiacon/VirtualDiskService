@@ -94,6 +94,7 @@
     <Compile Include="Interop\VdsServiceLoader.cs" />
     <Compile Include="Interop\VdsServiceProperties.cs" />
     <Compile Include="Interop\VdsVolumeProperties.cs" />
+    <Compile Include="IVdsPackExtensions.cs" />
     <Compile Include="IVdsServiceExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VdsService.cs" />

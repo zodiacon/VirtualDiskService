@@ -6,12 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Vds.Interop;
 
-namespace Vds
-{
-	public static class VdsService
-	{
-		public static IVdsService Create(string computerName = null)
-		{
+namespace Vds {
+	public static class VdsService {
+		public static IVdsService Create(string computerName = null) {
 			var vdsLoader = (IVdsServiceLoader)new VdsServiceLoader();
 			IVdsService vdsService;
 			int hr = vdsLoader.LoadService(computerName, out vdsService);
