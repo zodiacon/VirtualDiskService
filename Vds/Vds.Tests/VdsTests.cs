@@ -6,14 +6,53 @@ using Vds.Interop;
 namespace Vds.Tests {
 	[TestClass]
 	public class VdsTests {
-		[TestMethod]
-		public void TestLoader() {
+		IVdsService CreateVdsService() {
 			var vdsLoader = (IVdsServiceLoader)new VdsServiceLoader();
 			IVdsService vdsService;
 			int hr = vdsLoader.LoadService(null, out vdsService);
 			Marshal.ThrowExceptionForHR(hr);
+
 			hr = vdsService.WaitForServiceReady();
 			Marshal.ThrowExceptionForHR(hr);
+
+			return vdsService;
+		}
+
+		[TestMethod]
+		public void TestLoader() {
+			var vdsService = CreateVdsService();
+
+			VdsServiceProperties properties;
+			int hr = vdsService.GetProperties(out properties);
+			Marshal.ThrowExceptionForHR(hr);
+
+		}
+
+		[TestMethod]
+		public void TestProviders() {
+			var vdsService = CreateVdsService();
+			IEnumVdsObject providerEnum;
+			int hr = vdsService.QueryProviders(VdsProviderMask.Hardware | VdsProviderMask.Software | VdsProviderMask.VirtualDisk, out providerEnum);
+			Marshal.ThrowExceptionForHR(hr);
+
+			object iface;
+			int fetched;
+			while(0 == providerEnum.Next(1, out iface, out fetched)) {
+				var swProvider = iface as IVdsSwProvider;
+				if(swProvider != null) {
+					IEnumVdsObject packEnum;
+					Marshal.ThrowExceptionForHR(swProvider.QueryPacks(out packEnum));
+
+					EnumPacks(packEnum);
+				}
+			}
+		}
+
+		private void EnumPacks(IEnumVdsObject packEnum) {
+			object iface;
+			int fetched;
+			while(0 == packEnum.Next(1, out iface, out fetched)) {
+			}
 		}
 	}
 }

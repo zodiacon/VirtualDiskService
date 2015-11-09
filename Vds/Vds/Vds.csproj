@@ -40,9 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interop\IEnumVdsObject.cs" />
+    <Compile Include="Interop\IVdsDisk.cs" />
+    <Compile Include="Interop\IVdsPack.cs" />
+    <Compile Include="Interop\IVdsProvider.cs" />
     <Compile Include="Interop\IVdsService.cs" />
     <Compile Include="Interop\IVdsServiceLoader.cs" />
+    <Compile Include="Interop\IVdsSwProvider.cs" />
+    <Compile Include="Interop\VdsDiskProperties.cs" />
+    <Compile Include="Interop\VdsPackProperties.cs" />
+    <Compile Include="Interop\VdsProviderProperties.cs" />
     <Compile Include="Interop\VdsServiceLoader.cs" />
+    <Compile Include="Interop\VdsServiceProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
