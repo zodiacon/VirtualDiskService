@@ -12,7 +12,7 @@ namespace Vds.Interop {
 		int GetProperties(out VdsDiskProperties properties);
 
 		[PreserveSig]
-		int Getpack(out IVdsPack pack);
+		int GetPack(out IVdsPack pack);
 
 		//[PreserveSig]
 		//int GetIdentificationData(out VdsLunInformation data);

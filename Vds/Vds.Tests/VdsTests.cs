@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vds.Interop;
@@ -38,7 +39,12 @@ namespace Vds.Tests {
 			object iface;
 			int fetched;
 			while(0 == providerEnum.Next(1, out iface, out fetched)) {
-				var swProvider = iface as IVdsSwProvider;
+				var provider = iface as IVdsProvider;
+				VdsProviderProperties properties;
+				provider.GetProperties(out properties);
+				Debug.WriteLine($"{properties.Name} {properties.Id}");
+
+                var swProvider = iface as IVdsSwProvider;
 				if(swProvider != null) {
 					IEnumVdsObject packEnum;
 					Marshal.ThrowExceptionForHR(swProvider.QueryPacks(out packEnum));
@@ -52,7 +58,25 @@ namespace Vds.Tests {
 			object iface;
 			int fetched;
 			while(0 == packEnum.Next(1, out iface, out fetched)) {
+				var pack = iface as IVdsPack;
+				IEnumVdsObject diskEnum;
+				Marshal.ThrowExceptionForHR(pack.QueryDisks(out diskEnum));
+
+				EnumDisks(diskEnum);
 			}
+		}
+
+		private void EnumDisks(IEnumVdsObject diskEnum) {
+			object iface;
+			int fetched;
+			while(0 == diskEnum.Next(1, out iface, out fetched)) {
+				var disk = iface as IVdsDisk;
+				VdsDiskProperties properties;
+				Marshal.ThrowExceptionForHR(disk.GetProperties(out properties));
+
+				Debug.WriteLine($"{properties.FriendlyName} {properties.DiskGuid} {properties.Status}");
+
+            }  
 		}
 	}
 }
