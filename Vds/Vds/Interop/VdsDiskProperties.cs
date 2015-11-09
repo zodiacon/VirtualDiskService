@@ -63,17 +63,18 @@ namespace Vds.Interop {
 		[FieldOffset(68)] public uint Signature;
 		[FieldOffset(68)] public Guid DiskGuid;
 
-		[FieldOffset(84), MarshalAs(UnmanagedType.LPWStr)] public string DiskAddress;
 #if X86
-		[FieldOffset(88), MarshalAs(UnmanagedType.LPWStr)] public string Name;
-		[FieldOffset(92), MarshalAs(UnmanagedType.LPWStr)] public string FriendlyName;
-		[FieldOffset(96), MarshalAs(UnmanagedType.LPWStr)] public string AdaptorName;
-		[FieldOffset(100), MarshalAs(UnmanagedType.LPWStr)] public string DevicePath;
-#else
-		[FieldOffset(90), MarshalAs(UnmanagedType.LPWStr)] public string Name;
+		[FieldOffset(88), MarshalAs(UnmanagedType.LPWStr)] public string DiskAddress;
+		[FieldOffset(92), MarshalAs(UnmanagedType.LPWStr)] public string Name;
 		[FieldOffset(96), MarshalAs(UnmanagedType.LPWStr)] public string FriendlyName;
-		[FieldOffset(102), MarshalAs(UnmanagedType.LPWStr)] public string AdaptorName;
-		[FieldOffset(108), MarshalAs(UnmanagedType.LPWStr)] public string DevicePath;
+		[FieldOffset(100), MarshalAs(UnmanagedType.LPWStr)] public string AdaptorName;
+		[FieldOffset(104), MarshalAs(UnmanagedType.LPWStr)] public string DevicePath;
+#else
+		[FieldOffset(88), MarshalAs(UnmanagedType.LPWStr)] public string DiskAddress;
+		[FieldOffset(96), MarshalAs(UnmanagedType.LPWStr)] public string Name;
+		[FieldOffset(104), MarshalAs(UnmanagedType.LPWStr)] public string FriendlyName;
+		[FieldOffset(112), MarshalAs(UnmanagedType.LPWStr)] public string AdaptorName;
+		[FieldOffset(120), MarshalAs(UnmanagedType.LPWStr)] public string DevicePath;
 #endif
 	}
 }
