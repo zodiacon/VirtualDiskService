@@ -9,7 +9,7 @@ using Vds.Interop;
 
 namespace Vds {
 	public static class IVdsServiceExtensions {
-		public static IEnumerator<IVdsDisk> GetDisks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
+		public static IEnumerable<IVdsDisk> GetDisks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
 
 			foreach(var pack in vdsService.GetPacks(providerMask)) {
 				IEnumVdsObject diskEnum;
