@@ -9,9 +9,8 @@ using Vds.Interop;
 
 namespace Vds {
 	public static class IVdsServiceExtensions {
-		public static IEnumerable<IVdsDisk> GetDisks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
-
-			foreach(var pack in vdsService.GetPacks(providerMask)) {
+		public static IEnumerable<IVdsDisk> GetDisks(this IVdsService vdsService) {
+			foreach(var pack in vdsService.GetPacks()) {
 				IEnumVdsObject diskEnum;
 				Marshal.ThrowExceptionForHR(pack.QueryDisks(out diskEnum));
 				object iface;
@@ -35,8 +34,8 @@ namespace Vds {
 			}
 		}
 
-		public static IEnumerable<IVdsPack> GetPacks(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
-			foreach(var provider in vdsService.GetProviders(providerMask)) {
+		public static IEnumerable<IVdsPack> GetPacks(this IVdsService vdsService) {
+			foreach(var provider in vdsService.GetProviders(VdsProviderMask.Software)) {
 				var swProvider = provider as IVdsSwProvider;
 				if(swProvider != null) {
 					IEnumVdsObject packEnum;
@@ -50,8 +49,8 @@ namespace Vds {
 			}
 		}
 
-		public static IEnumerable<IVdsVolume> GetVolumes(this IVdsService vdsService, VdsProviderMask providerMask = VdsProviderMask.Software) {
-			foreach(var pack in vdsService.GetPacks(providerMask)) {
+		public static IEnumerable<IVdsVolume> GetVolumes(this IVdsService vdsService) {
+			foreach(var pack in vdsService.GetPacks()) {
 				IEnumVdsObject volumeEnum;
 				pack.QueryVolumes(out volumeEnum);
 				object iface;
